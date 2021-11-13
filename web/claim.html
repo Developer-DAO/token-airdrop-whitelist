@@ -12,28 +12,46 @@
       Your address: <span id="address"></span><br />
       Proof: <span id="proof"></span><br />
       <button id="connect">Connect wallet</button>
+      <button id="claim" disabled>Claim</button>
     </div>
 
     <script type="module">
       import { getProof } from "./getProof.mjs";
       import { ethers } from "./ethers-5.1.esm.min.js";
 
+      const contractAddress = "0xd1aBE04c4F9d685842863ED246147EaBABC45e6D";
+
       async function connect() {
         // get wallet address
+        await window.ethereum.enable();
         const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const accounts = await provider.listAccounts();
-        if (!accounts) return;
-        const address = accounts[0];
-        if (!address) return;
+        await provider.send("eth_requestAccounts", []);
+        getProof(provider);
+      }
 
+      async function getProof(provider) {
+        const signer = provider.getSigner();
+        const address = await signer.getAddress();
         document.getElementById("address").innerText = address;
         const proof = getProof(address);
         document.getElementById("proof").innerText =
           proof || "Selected address was not a NFT holder on ____ date.";
+
+        document.getElementById("claim").disabled = !proof;
+      }
+
+      async function claim() {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const proof = getProof(provider);
+        const signer = provider.getSigner();
+        const abi = ["function claim(bytes32[] calldata merkleProof) external"];
+        const contract = new ethers.Contract(address, abi, signer);
+        const res = contract.claim(ethers.utils.arrayify(proof));
       }
 
       window.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("connect").addEventListener("click", connect);
+        document.getElementById("claim").addEventListener("click", claim);
       });
     </script>
   </body>
