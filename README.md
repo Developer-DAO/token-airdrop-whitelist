@@ -1,3 +1,14 @@
+# DevCoin
+
+## Quickstart:
+
+- `npm run snapshot:nft`
+- `npm run generate:proofs`
+- `npm run build`
+- `npm test`
+
+Web page to get proof for your address is in web/
+
 # Advanced Sample Hardhat Project
 
 This project demonstrates an advanced Hardhat use case, integrating other tools commonly used alongside Hardhat in the ecosystem.
