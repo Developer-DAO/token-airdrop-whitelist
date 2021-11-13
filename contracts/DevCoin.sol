@@ -7,6 +7,7 @@ import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/structs/BitMaps.sol";
+//import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import "./MerkleProof.sol";
 
 // hard limit on the number of tokens that can ever exist
@@ -35,12 +36,11 @@ contract DevCoin is ERC20Capped, Ownable {
 
     /// Emitted when someone claims their airdrop tokens.
     event Claim(address indexed claimant, uint256 amount);
+
     event MerkleRootChanged(bytes32 merkleRoot);
+    event ClaimAttempt(address indexed claimant, bytes32 leaf);
 
     constructor() ERC20("DeveloperDAO", "DEV") ERC20Capped(12000000) {
-        // load up whitelist
-        // initializeNFTHolderSnapshot();
-
         // fund airdrops
         _mint(address(this), airdropSupply);
 
@@ -54,6 +54,8 @@ contract DevCoin is ERC20Capped, Ownable {
      */
     function claim(bytes32[] calldata merkleProof) external {
         bytes32 leaf = keccak256(abi.encodePacked(msg.sender));
+        emit ClaimAttempt(msg.sender, leaf);
+
         (bool valid, uint256 index) = MerkleProof.verify(
             merkleProof,
             merkleRoot,
@@ -61,6 +63,7 @@ contract DevCoin is ERC20Capped, Ownable {
         );
         require(valid, "DEV: Not holder of prestigious NFT");
 
+        // uint256 index = 1;
         // must not have claimed already
         require(!isClaimed(index), "DEV: Already claimed airdrop");
 
@@ -71,6 +74,7 @@ contract DevCoin is ERC20Capped, Ownable {
         emit Claim(msg.sender, airdropSize);
         _transfer(address(this), msg.sender, airdropSize);
     }
+
 
     /**
      * @dev Sets the merkle root.
