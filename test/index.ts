@@ -7,9 +7,6 @@ import { generateMerkleTree, getProof } from "../lib/proof";
 
 const contractName = "DevCoin";
 
-// max coins
-const CAP = 12000000;
-
 describe(`${contractName} Airdrop`, () => {
   let dc: Contract;
   let tree: MerkleTree;
@@ -19,12 +16,14 @@ describe(`${contractName} Airdrop`, () => {
   let treasury: SignerWithAddress;
   let airdropSupply: number;
   let airdropSize: number;
+  let CAP: number;
 
   beforeEach(async () => {
     const DevCoin = await ethers.getContractFactory(contractName);
     dc = await DevCoin.deploy();
     await dc.deployed();
 
+    CAP = await dc.cap();
     treasury = await dc.getTreasuryAddress();
     airdropSupply = await dc.getAirdropSupply();
     airdropSize = await dc.getAirdropSize();
