@@ -1,10 +1,12 @@
 {
   "name": "devcoin",
   "scripts": {
+    "test": "hardhat test",
     "snapshot:nft": "ts-node scripts/nftSnapshot.ts",
     "build": "tsc && hardhat compile",
     "deploy": "hardhat deploy",
-    "generate:proofs": "ts-node scripts/generateMerkleProofs.ts"
+    "generate:proofs": "ts-node scripts/generateMerkleProofs.ts && npm run bundle:proofs",
+    "bundle:proofs": "esbuild --bundle web/getProof.ts --outfile=web/getProof.mjs --minify --format=esm"
   },
   "engines": {
     "node": ">=12.0.0"

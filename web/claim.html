@@ -22,7 +22,6 @@
       const contractAddress = "0xd1aBE04c4F9d685842863ED246147EaBABC45e6D";
 
       async function connect() {
-        // get wallet address
         await window.ethereum.enable();
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         await provider.send("eth_requestAccounts", []);
@@ -34,8 +33,9 @@
         const address = await signer.getAddress();
         document.getElementById("address").innerText = address;
         const proof = getProof(address);
-        document.getElementById("proof").innerText =
-          proof || "Selected address was not a NFT holder on ____ date.";
+        document.getElementById("proof").innerText = proof
+          ? proof.join(", ")
+          : "Selected address was not a NFT holder on ____ date.";
 
         document.getElementById("claim").disabled = !proof;
       }
