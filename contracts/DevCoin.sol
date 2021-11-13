@@ -29,6 +29,9 @@ uint256 constant remainingTokens = cap - airdropSupply; // leftovers
  * A merkle root of the tree of all addresses of NFT holders is supplied to verify claims.
  */
 contract DevCoin is ERC20Capped, Ownable {
+    /// @dev Where all the tokens not claimed in the airdrop go
+    address public immutable treasuryAddress = 0xB2Ebc9b3a788aFB1E942eD65B59E9E49A1eE500D;  // sha.eth
+
     using BitMaps for BitMaps.BitMap;
 
     bytes32 public merkleRoot;
@@ -41,11 +44,21 @@ contract DevCoin is ERC20Capped, Ownable {
     event ClaimAttempt(address indexed claimant, bytes32 leaf);
 
     constructor() ERC20("DeveloperDAO", "DEV") ERC20Capped(12000000) {
-        // fund airdrops
+        // fund the contract with airdrops
         _mint(address(this), airdropSupply);
 
-        // grant the rest to the creator - can send this to treasury
-        _mint(msg.sender, remainingTokens);
+        // grant the rest to treasury
+        _mint(treasuryAddress, remainingTokens);
+    }
+
+    function getTreasuryAddress() external view returns (address) {
+        return treasuryAddress;
+    }
+    function getAirdropSupply() external pure returns (uint256) {
+        return airdropSupply;
+    }
+    function getAirdropSize() external pure returns (uint256) {
+        return airdropSize;
     }
 
     /**
@@ -95,10 +108,9 @@ contract DevCoin is ERC20Capped, Ownable {
 
     /**
      * @dev Collect unclaimed tokens after airdrop.
-     * @param dest The wallet to collect the unclaimed tokens into.
      */
-    function sweep(address dest) external onlyOwner {
-        _transfer(address(this), dest, balanceOf(address(this)));
+    function sweep() external onlyOwner {
+        _transfer(address(this), treasuryAddress, balanceOf(address(this)));
     }
 
     /**

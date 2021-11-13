@@ -16,11 +16,18 @@ describe(`${contractName} Airdrop`, () => {
   let goodAddresses: string[];
   let goodSigners: SignerWithAddress[];
   let badSigners: SignerWithAddress[];
+  let treasury: SignerWithAddress;
+  let airdropSupply: number;
+  let airdropSize: number;
 
   beforeEach(async () => {
     const DevCoin = await ethers.getContractFactory(contractName);
     dc = await DevCoin.deploy();
     await dc.deployed();
+
+    treasury = await dc.getTreasuryAddress();
+    airdropSupply = await dc.getAirdropSupply();
+    airdropSize = await dc.getAirdropSize();
 
     // get some identities for testing
     const signers = await ethers.getSigners();
@@ -53,6 +60,17 @@ describe(`${contractName} Airdrop`, () => {
     const claimTx = await dc.connect(goodSigner).claim(goodProof);
     await claimTx.wait();
 
+    // tokens should be transferred
+    const goodBalance = await dc.connect(goodSigner).myBalance();
+    expect(goodBalance).to.equal(airdropSize);
+
+    // amount reserved for treasury in the beginning
+    expect(await dc.balanceOf(treasury)).to.equal(CAP - airdropSupply);
+    // contract should be funded for airdrops
+    expect(await dc.balanceOf(dc.address)).to.equal(
+      airdropSupply - airdropSize
+    );
+
     // claim again from same sender, should blow up
     // can't claim twice
     expect(dc.connect(goodSigner).claim(goodProof)).to.be.revertedWith(
@@ -64,5 +82,24 @@ describe(`${contractName} Airdrop`, () => {
     expect(dc.connect(badSigner).claim(goodProof)).to.be.revertedWith(
       "DEV: Not holder of prestigious NFT"
     );
+
+    expect(await dc.totalSupply()).to.equal(CAP);
+  });
+
+  it("sweeps unclaimed amount", async function () {
+    const goodSigner = goodSigners[2];
+    const goodAddress = goodSigner.address;
+    const goodProof = getProof(tree, goodAddress);
+
+    // claim from good address
+    const claimTx = await dc.connect(goodSigner).claim(goodProof);
+    await claimTx.wait();
+
+    // now collect unclaimed tokens and add them to treasury
+    await dc.sweep();
+
+    // should be transferred from contract to treasury
+    expect(await dc.balanceOf(treasury)).to.equal(CAP - airdropSize);
+    expect(await dc.balanceOf(dc.address)).to.equal(0);
   });
 });
