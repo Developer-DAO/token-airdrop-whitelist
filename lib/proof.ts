@@ -1,4 +1,3 @@
-// import { keccak256 } from "ethers/lib/utils";
 import { MerkleTree } from "merkletreejs";
 import keccak256 from "keccak256";
 
