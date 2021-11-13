@@ -12,8 +12,8 @@ describe("DevCoin Airdrop", function () {
 
     expect(await dc.totalSupply).to.equal(CAP);
 
-    const mintTx = await dc.
-    await mintTx.wait();
+    // const mintTx = await dc.
+    // await mintTx.wait();
 
     // boom
     // expect(await greeter.greet()).to.equal("Hola, mundo!");

@@ -1,5 +1,11 @@
 {
   "name": "devcoin",
+  "scripts": {
+    "snapshot:nft": "ts-node scripts/nftSnapshot.ts",
+    "build": "tsc && hardhat compile",
+    "deploy": "hardhat deploy",
+    "generate:proofs": "ts-node scripts/generateMerkleProofs.ts"
+  },
   "engines": {
     "node": ">=12.0.0"
   },
@@ -19,6 +25,7 @@
     "@typescript-eslint/parser": "^4.33.0",
     "chai": "^4.3.4",
     "dotenv": "^10.0.0",
+    "esbuild": "^0.13.13",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard": "^16.0.3",

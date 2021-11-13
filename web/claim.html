@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DeveloperDAO Airdrop Claim</title>
+  </head>
+
+  <body>
+    <div>
+      Your address: <span id="address"></span><br />
+      Proof: <span id="proof"></span><br />
+      <button id="connect">Connect wallet</button>
+    </div>
+
+    <script type="module">
+      import { getProof } from "./getProof.mjs";
+      import { ethers } from "./ethers-5.1.esm.min.js";
+
+      async function connect() {
+        // get wallet address
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const accounts = await provider.listAccounts();
+        if (!accounts) return;
+        const address = accounts[0];
+        if (!address) return;
+
+        document.getElementById("address").innerText = address;
+        const proof = getProof(address);
+        document.getElementById("proof").innerText =
+          proof || "Selected address was not a NFT holder on ____ date.";
+      }
+
+      window.addEventListener("DOMContentLoaded", async () => {
+        document.getElementById("connect").addEventListener("click", connect);
+      });
+    </script>
+  </body>
+</html>
