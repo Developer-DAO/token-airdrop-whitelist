@@ -10,7 +10,15 @@ The use case is for the [Developer DAO](https://www.developerdao.com/), allowing
 
 ## Quickstart:
 
-- Modify <contracts/DevCoin.sol> to your liking.
+Create `.env` (optional, just for testing):
+
+```
+ETHERSCAN_API_KEY=$APIKEY
+ROPSTEN_URL=https://eth-kovan.alchemyapi.io/v2/$APIKEY
+PRIVATE_KEY=0xabcdef1234...
+```
+
+- Modify (contracts/DevCoin.sol)[contracts/DevCoin.sol] to your liking.
 - `npm run snapshot:nft` -- gets a list of addresses who hold a given NFT.
 - `npm run generate:proofs` -- generates a mapping of address => proof.
 - `npm run build` -- compiles contract.
