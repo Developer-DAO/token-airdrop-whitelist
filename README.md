@@ -24,7 +24,7 @@ PRIVATE_KEY=0xabcdef1234...
 - `npm run build` -- compiles contract.
 - `npm test` -- tests contract. It is highly recommended to read <test/index.ts> to understand how the contract works.
 
-An included sample web3 script to get a proof for your wallet address is in <web/>.
+An included sample web3 script to get a proof for your wallet address is in [web/](web).
 
 ## Technical details
 
