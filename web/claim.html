@@ -16,10 +16,15 @@
     </div>
 
     <script type="module">
-      import { getProof } from "./getProof.mjs";
+      // import { getProof } from "./getProof.mjs";
       import { ethers } from "./ethers-5.1.esm.min.js";
 
-      const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+      const contractAddress = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9";
+
+      const getTestProof = () => [
+        "0xe9707d0e6171f728f7473c24cc0432a9b07eaaf1efed6a137a4a8c12c79552d9",
+      ];
+      const getProof = getTestProof;
 
       async function connect() {
         await window.ethereum.enable();
@@ -46,7 +51,8 @@
         const signer = provider.getSigner();
         const abi = ["function claim(bytes32[] calldata merkleProof) external"];
         const contract = new ethers.Contract(address, abi, signer);
-        const res = contract.claim(ethers.utils.arrayify(proof));
+        const res = await contract.claim(proof);
+        console.log(res);
       }
 
       window.addEventListener("DOMContentLoaded", async () => {

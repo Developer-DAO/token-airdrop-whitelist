@@ -4,22 +4,31 @@
 // When running the script with `npx hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
 import { ethers } from "hardhat";
+import { generateMerkleTree, getProof } from "../lib/proof";
 
 async function main() {
-  // Hardhat always runs the compile task when running scripts with its command
-  // line interface.
-  //
-  // If this script is run directly using `node` you may want to call compile
-  // manually to make sure everything is compiled
-  // await hre.run('compile');
-
-  // We get the contract to deploy
   const DevCoin = await ethers.getContractFactory("DevCoin");
-  const dc = await DevCoin.deploy();
+  const treasuryAddress = "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266";
+  const dc = await DevCoin.deploy(treasuryAddress);
 
   await dc.deployed();
+  console.log("Contract deployed to:", dc.address);
 
-  console.log("DevCoin contract deployed to:", dc.address);
+  // for testing
+  if (process.env.TESTING_CONTRACT) {
+    console.log("Setting merkle root for testing...");
+    const [owner, goodSigner] = await ethers.getSigners();
+    const tree = generateMerkleTree([owner.address, goodSigner.address]);
+    await dc.setMerkleRoot(tree.getHexRoot());
+    console.log("Contract merkle root set to:", await dc.merkleRoot());
+
+    console.log(
+      `Proof for signer ${goodSigner.address} is ${getProof(
+        tree,
+        goodSigner.address
+      )}`
+    );
+  }
 }
 
 // We recommend this pattern to be able to use async/await everywhere

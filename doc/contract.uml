@@ -1,0 +1,26 @@
+@startuml
+actor Owner
+participant Treasury
+actor Claimer1
+actor Claimer2
+entity Contract
+
+note over Claimer1 : Has NFT
+note over Claimer2 : Rando
+
+Owner -> Contract: Deploy
+Contract ->o Contract: Mint tokens reserved for airdrop 
+Contract ->o Treasury: Mint remaining tokens
+
+Claimer1 -> Contract: Claim with proof
+Contract ->o Claimer1: Send airdrop tokens
+Claimer1 -x Contract: Claim with proof again (rejected)
+
+Claimer2 -x Contract: Claim without proof
+
+... Airdrop period ends ...
+
+Owner -> Contract: sweep()
+Contract ->o Treasury: Remaining airdrop tokens collected to treasury
+
+@enduml

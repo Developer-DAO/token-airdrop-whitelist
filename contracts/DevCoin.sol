@@ -30,7 +30,7 @@ uint256 constant remainingTokens = cap - airdropSupply; // leftovers
  */
 contract DevCoin is ERC20Capped, Ownable {
     /// @dev Where all the tokens not claimed in the airdrop go
-    address public immutable treasuryAddress = 0xB2Ebc9b3a788aFB1E942eD65B59E9E49A1eE500D;  // sha.eth
+    address public immutable _treasuryAddress;
 
     using BitMaps for BitMaps.BitMap;
 
@@ -43,20 +43,27 @@ contract DevCoin is ERC20Capped, Ownable {
     event MerkleRootChanged(bytes32 merkleRoot);
     event ClaimAttempt(address indexed claimant, bytes32 leaf);
 
-    constructor() ERC20("DeveloperDAO", "DEV") ERC20Capped(12000000) {
+    constructor(address treasuryAddress)
+        ERC20("DeveloperDAO", "DEV")
+        ERC20Capped(12000000)
+    {
+        _treasuryAddress = treasuryAddress;
+
         // fund the contract with airdrops
         _mint(address(this), airdropSupply);
 
         // grant the rest to treasury
-        _mint(treasuryAddress, remainingTokens);
+        _mint(_treasuryAddress, remainingTokens);
     }
 
     function getTreasuryAddress() external view returns (address) {
-        return treasuryAddress;
+        return _treasuryAddress;
     }
+
     function getAirdropSupply() external pure returns (uint256) {
         return airdropSupply;
     }
+
     function getAirdropSize() external pure returns (uint256) {
         return airdropSize;
     }
@@ -88,7 +95,6 @@ contract DevCoin is ERC20Capped, Ownable {
         _transfer(address(this), msg.sender, airdropSize);
     }
 
-
     /**
      * @dev Sets the merkle root.
      * @param _merkleRoot The merkle root to set.
@@ -110,7 +116,7 @@ contract DevCoin is ERC20Capped, Ownable {
      * @dev Collect unclaimed tokens after airdrop.
      */
     function sweep() external onlyOwner {
-        _transfer(address(this), treasuryAddress, balanceOf(address(this)));
+        _transfer(address(this), _treasuryAddress, balanceOf(address(this)));
     }
 
     /**
