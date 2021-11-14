@@ -15,9 +15,9 @@ describe(`${contractName} Airdrop`, () => {
   let badSigners: SignerWithAddress[];
   let treasury: SignerWithAddress;
   let owner: SignerWithAddress;
-  let airdropSupply: number;
-  let airdropSize: number;
-  let CAP: number;
+  let airdropSupply: bigint;
+  let airdropSize: bigint;
+  let CAP: bigint;
 
   beforeEach(async () => {
     // get some identities for testing
@@ -32,10 +32,10 @@ describe(`${contractName} Airdrop`, () => {
     dc = await DevCoin.deploy(await treasury.getAddress());
     await dc.deployed();
 
-    CAP = await dc.cap();
+    CAP = BigInt(await dc.cap());
     treasury = await dc.getTreasuryAddress();
-    airdropSupply = await dc.getAirdropSupply();
-    airdropSize = await dc.getAirdropSize();
+    airdropSupply = BigInt(await dc.getAirdropSupply());
+    airdropSize = BigInt(await dc.getAirdropSize());
 
     // construct merkle tree
     tree = generateMerkleTree(goodAddresses);
