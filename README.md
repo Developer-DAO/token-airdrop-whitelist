@@ -6,7 +6,17 @@ This is a project to power an airdrop of tokens according to some predefined cri
 
 When the contract is deployed, some portion of the tokens reserved for the airdrop are made available to a whitelisted set of addresses, and the remaining tokens go to a treasury wallet. After some time any tokens unclaimed in the airdrop can be swept up into the treasury.
 
-The use case is for the Developer DAO, allowing holders of the first (free) Developer DAO NFTs to claim a number of tokens for themselves.
+The use case is for the [Developer DAO](https://www.developerdao.com/), allowing holders of the first (free) Developer DAO NFTs to claim a number of tokens for themselves. This project can be easily modified to support any desired criteria for whitelisting airdrop recipients.
+
+## Quickstart:
+
+- Modify <contracts/DevCoin.sol> to your liking.
+- `npm run snapshot:nft` -- gets a list of addresses who hold a given NFT.
+- `npm run generate:proofs` -- generates a mapping of address => proof.
+- `npm run build` -- compiles contract.
+- `npm test` -- tests contract. It is highly recommended to read <test/index.ts> to understand how the contract works.
+
+An included sample web3 script to get a proof for your wallet address is in <web/>.
 
 ## Technical details
 
@@ -14,14 +24,12 @@ The challenge that this project solves is defining a whitelist of approved addre
 
 When a whitelisted holder presents their merkle proof to the `claim()` function, if their address matches the proof and belongs in the merkle tree, they are approved to claim their airdrop tokens, once.
 
-## Quickstart:
+### Uses:
 
-- `npm run snapshot:nft` -- gets a list of addresses who hold a given NFT.
-- `npm run generate:proofs` -- generates a mapping of address => proof.
-- `npm run build` -- compiles contract.
-- `npm test` -- tests contract. Highly recommended to read <test/index.ts> to understand how the contract works.
-
-An included sample web3 script to get a proof for your wallet address is in <web/>.
+- **OpenZeppelin** for contract foundation
+- **HardHat** for contract testing
+- **Ethers.js** for sample web3 app
+- **merkletree.js** for merkle proof generation
 
 ## Diagram
 
@@ -29,4 +37,10 @@ An included sample web3 script to get a proof for your wallet address is in <web
 
 # Performance optimizations
 
-For faster runs of your tests and scripts, consider skipping ts-node's type checking by setting the environment variable `TS_NODE_TRANSPILE_ONLY` to `1` in hardhat's environment. For more details see [the documentation](https://hardhat.org/guides/typescript.html#performance-optimizations).
+For faster runs of your tests and scripts, consider skipping ts-node's type checking by setting the environment variable `TS_NODE_TRANSPILE_ONLY` to `1` in hardhat's environment. For more details see [hardhat documentation](https://hardhat.org/guides/typescript.html#performance-optimizations).
+
+## Credits
+
+- [Mischa Spiegelmock](https://twitter.com/spiegelmock) @DeveloperDAO @JetBridge
+
+  If you make money with this feel free to send me some at `mish.eth`
