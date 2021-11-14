@@ -2,6 +2,7 @@
   "name": "devcoin",
   "scripts": {
     "test": "hardhat test",
+    "test:gas": "REPORT_GAS=1 npm test",
     "snapshot:nft": "ts-node scripts/nftSnapshot.ts",
     "build": "tsc && hardhat compile && npm run bundle:proofs",
     "deploy": "hardhat deploy",

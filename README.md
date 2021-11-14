@@ -24,6 +24,8 @@ INFURA_KEY=https://mainnet.infura.io/v3/$APIKEY
 - `npm run generate:proofs` -- generates a mapping of address => proof.
 - `npm run build` -- compiles contract.
 - `npm test` -- tests contract. It is highly recommended to read <test/index.ts> to understand how the contract works.
+- `npm run deploy:local` -- deploy to local hardhat network.
+- `npm run deploy:ropsten` -- deploy to ropsten hardhat network.
 
 An included sample web3 script to get a proof for your wallet address is in [web/](web).
 
