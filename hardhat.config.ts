@@ -42,7 +42,6 @@ const config: HardhatUserConfig = {
   abiExporter: {
     path: "./web/abi",
     clear: true,
-    flat: true,
     only: [":DevCoin$"],
     spacing: 2,
     pretty: true,

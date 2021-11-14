@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Modified from https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.3.0/contracts/utils/cryptography/MerkleProof.sol
+// Borrowed from https://etherscan.io/address/0xc18360217d8f7ab5e7c516566761ea12ce7f9d72#code
 
 pragma solidity ^0.8.0;
 
@@ -33,10 +34,14 @@ library MerkleProof {
 
             if (computedHash <= proofElement) {
                 // Hash(current computed hash + current element of the proof)
-                computedHash = keccak256(abi.encodePacked(computedHash, proofElement));
+                computedHash = keccak256(
+                    abi.encodePacked(computedHash, proofElement)
+                );
             } else {
                 // Hash(current element of the proof + current computed hash)
-                computedHash = keccak256(abi.encodePacked(proofElement, computedHash));
+                computedHash = keccak256(
+                    abi.encodePacked(proofElement, computedHash)
+                );
                 index += 1;
             }
         }

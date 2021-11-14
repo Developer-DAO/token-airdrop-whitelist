@@ -7,18 +7,17 @@ import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/structs/BitMaps.sol";
-//import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import "./MerkleProof.sol";
 
 // hard limit on the number of tokens that can ever exist
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Capped.sol";
 
 // hard limit number of tokens that can ever exist
-uint256 constant cap = 12000000; // 12mil
+uint256 constant cap = 12000000 ether; // 12mil
 
 // how many tokens each NFT holder address can claim
 uint256 constant airdropSupply = cap / 4; // amount reserved for airdrop (25%)
-uint256 constant airdrops = 6000; // approx number of NFT holders
+uint256 constant airdrops = 8000; // approx number of NFT holders
 uint256 constant airdropSize = airdropSupply / airdrops; // 600 per holder
 uint256 constant remainingTokens = cap - airdropSupply; // leftovers
 
@@ -45,7 +44,7 @@ contract DevCoin is ERC20Capped, Ownable {
 
     constructor(address treasuryAddress)
         ERC20("DeveloperDAO", "DEV")
-        ERC20Capped(12000000)
+        ERC20Capped(12000000 ether)
     {
         _treasuryAddress = treasuryAddress;
 
