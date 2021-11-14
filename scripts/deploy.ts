@@ -6,10 +6,15 @@
 import { ethers } from "hardhat";
 import { generateMerkleTree, getProof } from "../lib/proof";
 
+const isTestingMode = !!process.env.TESTING_CONTRACT;
+const treasuryAddress = "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"; // where all the tokens not airdropped go
+
 async function main() {
   const DevCoin = await ethers.getContractFactory("DevCoin");
-  const treasuryAddress = "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266";
-  const dc = await DevCoin.deploy(treasuryAddress);
+  const dc = await DevCoin.deploy(
+    // set immutable treasury address
+    isTestingMode ? (await ethers.getSigners())[1].address : treasuryAddress
+  );
 
   await dc.deployed();
   console.log("Contract deployed to:", dc.address);

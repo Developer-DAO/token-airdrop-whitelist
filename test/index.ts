@@ -14,25 +14,28 @@ describe(`${contractName} Airdrop`, () => {
   let goodSigners: SignerWithAddress[];
   let badSigners: SignerWithAddress[];
   let treasury: SignerWithAddress;
+  let owner: SignerWithAddress;
   let airdropSupply: number;
   let airdropSize: number;
   let CAP: number;
 
   beforeEach(async () => {
+    // get some identities for testing
+    const signers = await ethers.getSigners();
+    owner = signers.shift()!;
+    treasury = signers.shift()!;
+    goodSigners = signers.slice(0, 5);
+    goodAddresses = goodSigners.map((s) => s.address);
+    badSigners = signers.slice(5);
+
     const DevCoin = await ethers.getContractFactory(contractName);
-    dc = await DevCoin.deploy();
+    dc = await DevCoin.deploy(await treasury.getAddress());
     await dc.deployed();
 
     CAP = await dc.cap();
     treasury = await dc.getTreasuryAddress();
     airdropSupply = await dc.getAirdropSupply();
     airdropSize = await dc.getAirdropSize();
-
-    // get some identities for testing
-    const signers = await ethers.getSigners();
-    goodSigners = signers.slice(0, 5);
-    goodAddresses = goodSigners.map((s) => s.address);
-    badSigners = signers.slice(5);
 
     // construct merkle tree
     tree = generateMerkleTree(goodAddresses);
@@ -45,11 +48,16 @@ describe(`${contractName} Airdrop`, () => {
     expect(await dc.merkleRoot()).to.equal(merkleRoot);
   });
 
-  it("Total supply is equal to cap", async function () {
+  it("Contains remaining tokens in the treasury", async function () {
+    // amount reserved for treasury in the beginning
+    expect(await dc.balanceOf(treasury)).to.equal(CAP - airdropSupply);
+  });
+
+  it("Has total supply equal to cap", async function () {
     expect(await dc.totalSupply()).to.equal(CAP);
   });
 
-  it("allows claiming with valid proofs", async function () {
+  it("Allows claiming with valid proofs", async function () {
     // attempt to claim with a valid proof for goodAddress (sender)
     const goodSigner = goodSigners[1]; // 0 is owner
     const goodAddress = goodSigner.address;
@@ -63,8 +71,6 @@ describe(`${contractName} Airdrop`, () => {
     const goodBalance = await dc.connect(goodSigner).myBalance();
     expect(goodBalance).to.equal(airdropSize);
 
-    // amount reserved for treasury in the beginning
-    expect(await dc.balanceOf(treasury)).to.equal(CAP - airdropSupply);
     // contract should be funded for airdrops
     expect(await dc.balanceOf(dc.address)).to.equal(
       airdropSupply - airdropSize

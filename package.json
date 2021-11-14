@@ -6,6 +6,7 @@
     "build": "tsc && hardhat compile && npm run bundle:proofs",
     "deploy": "hardhat deploy",
     "deploy:local": "TESTING_CONTRACT=1 hardhat run --network localhost scripts/deploy.ts",
+    "deploy:ropsten": "hardhat run --network ropsten scripts/deploy.ts",
     "console": "hardhat console",
     "generate:proofs": "ts-node scripts/generateMerkleProofs.ts && npm run bundle:proofs",
     "bundle:proofs": "esbuild --bundle web/getProof.ts --outfile=web/getProof.mjs --minify --format=esm"
@@ -40,6 +41,7 @@
     "ethereum-waffle": "^3.4.0",
     "ethers": "^5.5.1",
     "hardhat": "^2.6.8",
+    "hardhat-abi-exporter": "^2.3.1",
     "hardhat-gas-reporter": "^1.0.4",
     "prettier": "^2.4.1",
     "prettier-plugin-solidity": "^1.0.0-beta.13",

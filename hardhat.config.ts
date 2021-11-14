@@ -4,6 +4,7 @@ import { HardhatUserConfig, task } from "hardhat/config";
 import "@nomiclabs/hardhat-etherscan";
 import "@nomiclabs/hardhat-waffle";
 import "@typechain/hardhat";
+import "hardhat-abi-exporter";
 import "hardhat-gas-reporter";
 import "solidity-coverage";
 
@@ -37,6 +38,14 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: process.env.ETHERSCAN_API_KEY,
+  },
+  abiExporter: {
+    path: "./web/abi",
+    clear: true,
+    flat: true,
+    only: [":DevCoin$"],
+    spacing: 2,
+    pretty: true,
   },
 };
 
