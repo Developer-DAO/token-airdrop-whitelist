@@ -16,6 +16,7 @@ Create `.env` (optional, just for testing):
 ETHERSCAN_API_KEY=$APIKEY
 ROPSTEN_URL=https://eth-kovan.alchemyapi.io/v2/$APIKEY
 PRIVATE_KEY=0xabcdef1234...
+INFURA_KEY=https://mainnet.infura.io/v3/$APIKEY
 ```
 
 - Modify (contracts/DevCoin.sol)[contracts/DevCoin.sol] to your liking.

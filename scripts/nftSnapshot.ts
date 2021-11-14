@@ -1,14 +1,19 @@
 import { ERC721 } from "@0xcert/ethereum-erc721/build/erc721.json";
 import Web3 from "web3";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 const CONTRACT_ACCOUNT = "0x25ed58c027921E14D86380eA2646E3a1B5C55A8b";
 const CONTRACT_START = 13153967;
-const INFURA_KEY = "263a394bc14c4107949a73b0fb485ebb";
+const INFURA_URL = process.env.INFURA_URL;
+if (!INFURA_URL)
+  throw new Error(
+    "Please set INFURA_URL in .env - register at https://infura.io/"
+  );
 const fs = require("fs");
 
-const web3 = new Web3(
-  new Web3.providers.HttpProvider("https://mainnet.infura.io/v3/" + INFURA_KEY)
-);
+const web3 = new Web3(new Web3.providers.HttpProvider(INFURA_URL));
 const erc721 = ERC721;
 const contract = new web3.eth.Contract(erc721.abi as any, CONTRACT_ACCOUNT);
 
