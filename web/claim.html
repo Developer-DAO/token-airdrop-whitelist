@@ -19,16 +19,16 @@
       import { getProof } from "./getProof.mjs";
       import { ethers } from "./ethers-5.1.esm.min.js";
 
-      const contractAddress = "0xd1aBE04c4F9d685842863ED246147EaBABC45e6D";
+      const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
       async function connect() {
         await window.ethereum.enable();
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         await provider.send("eth_requestAccounts", []);
-        getProof(provider);
+        lookUpProof(provider);
       }
 
-      async function getProof(provider) {
+      async function lookUpProof(provider) {
         const signer = provider.getSigner();
         const address = await signer.getAddress();
         document.getElementById("address").innerText = address;

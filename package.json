@@ -2,8 +2,9 @@
   "name": "devcoin",
   "scripts": {
     "test": "hardhat test",
+    "ganache": "ganache --wallet.seed blorp",
     "snapshot:nft": "ts-node scripts/nftSnapshot.ts",
-    "build": "tsc && hardhat compile",
+    "build": "tsc && hardhat compile && npm run bundle:proofs",
     "deploy": "hardhat deploy",
     "generate:proofs": "ts-node scripts/generateMerkleProofs.ts && npm run bundle:proofs",
     "bundle:proofs": "esbuild --bundle web/getProof.ts --outfile=web/getProof.mjs --minify --format=esm"
@@ -15,6 +16,7 @@
     "@0xcert/ethereum-erc721": "2.0.0",
     "@nomiclabs/hardhat-ethers": "^2.0.2",
     "@nomiclabs/hardhat-etherscan": "^2.1.7",
+    "@nomiclabs/hardhat-ganache": "^2.0.1",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
     "@openzeppelin/contracts": "^4.3.3",
     "@typechain/ethers-v5": "^7.2.0",
@@ -49,6 +51,7 @@
     "web3": "^1.6.0"
   },
   "dependencies": {
+    "ganache": "^6.4.5",
     "keccak256": "^1.0.3",
     "merkletreejs": "^0.2.24"
   }
