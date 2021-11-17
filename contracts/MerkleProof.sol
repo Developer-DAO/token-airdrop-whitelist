@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MIT
+// Taken from https://etherscan.io/address/0xc18360217d8f7ab5e7c516566761ea12ce7f9d72#code#F16#L1
 // Modified from https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.3.0/contracts/utils/cryptography/MerkleProof.sol
 // Borrowed from https://etherscan.io/address/0xc18360217d8f7ab5e7c516566761ea12ce7f9d72#code
 

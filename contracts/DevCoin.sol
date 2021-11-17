@@ -36,12 +36,6 @@ contract DevCoin is ERC20Capped, Ownable {
     bytes32 public merkleRoot;
     BitMaps.BitMap private claimed;
 
-    /// Emitted when someone claims their airdrop tokens.
-    event Claim(address indexed claimant, uint256 amount);
-
-    event MerkleRootChanged(bytes32 merkleRoot);
-    event ClaimAttempt(address indexed claimant, bytes32 leaf);
-
     constructor(address treasuryAddress)
         ERC20("DeveloperDAO", "DEV")
         ERC20Capped(12000000 ether)
@@ -73,7 +67,6 @@ contract DevCoin is ERC20Capped, Ownable {
      */
     function claim(bytes32[] calldata merkleProof) external {
         bytes32 leaf = keccak256(abi.encodePacked(msg.sender));
-        emit ClaimAttempt(msg.sender, leaf);
 
         (bool valid, uint256 index) = MerkleProof.verify(
             merkleProof,
@@ -90,7 +83,6 @@ contract DevCoin is ERC20Capped, Ownable {
         claimed.set(index);
 
         // Airdrop like Bernanke
-        emit Claim(msg.sender, airdropSize);
         _transfer(address(this), msg.sender, airdropSize);
     }
 
@@ -100,7 +92,6 @@ contract DevCoin is ERC20Capped, Ownable {
      */
     function setMerkleRoot(bytes32 _merkleRoot) external onlyOwner {
         merkleRoot = _merkleRoot;
-        emit MerkleRootChanged(_merkleRoot);
     }
 
     /**
