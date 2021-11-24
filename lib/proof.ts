@@ -1,9 +1,7 @@
 import { MerkleTree } from "merkletreejs";
 import keccak256 from "keccak256";
 
-// convert hex string (0xabcd123) to hash, hashing not the string but the actual value
-const hashStringAddress = (address: string): string =>
-  keccak256(Buffer.from(address.substring(2), "hex")); // decode hex string
+const hashStringAddress = (address: string): string => keccak256(address);
 
 export function generateMerkleTree(addresses: string[]) {
   const leaves = addresses.map((v: string) => hashStringAddress(v));
